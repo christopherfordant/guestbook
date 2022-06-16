@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Livre d’or des conférences{% endblock %}
+
+{% block body %}
+    <h1>Faîtes nous un retour !!!</h1>
+
+    <div class="card text-left mt-4">
+        <div class="card-header">
+            <form>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="row form-group">
+                            <label for="year_search" class="col-sm-6 col-form-label">Année</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" id="year_search" name="year_search">
+                                        <option {{ (year_search == '' ? 'selected') }}></option>
+                                    {% for year in years %}
+                                        <option {{ (year_search == year ? 'selected') }}>{{ year }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="row form-group">
+                            <label for="city_search" class="col-sm-6 col-form-label text-end">Ville</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" id="city_search" name="city_search">
+                                        <option {{ (city_search == '' ? 'selected') }}></option>
+                                    {% for city in citys %}
+                                        <option {{ (city_search == city ? 'selected') }}>{{ city }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <button type="submit" class="btn btn-sm btn-primary">Rechercher</button>
+                        <a href="{{ path('newConference') }}" class="btn btn-sm btn-primary">
+                            Ajouter une conférence
+                        </a>
+                 </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+            {% for conference in conferences %}
+                <li class="list-group-item list-group-item-action">
+                    <a href="{{ path('ficheConference', {id: conference.id}) }}">
+                        {{ conference }}
+                    </a>
+                    &nbsp;&nbsp;
+                    <a href="{{ path('conference_newcomment', {id: conference.id}) }}" class="btn btn-outline-primary"
+                        style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .2rem; --bs-btn-font-size: .75rem;" title="Ajouter un commentaire">
+                        +
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-12">
+                    {% if previous >= 0 %}
+                        <a class="btn btn-sm btn-primary" href="{{ path('app_conference', { offset: previous }) }}">Précédent</a>
+                    {% endif %}
+                        Il y a {{ conferences|length~' conférence'~( conferences|length > 1 ? 's' : '') }}
+                    {% if next < conferences|length %}
+                        <a class="btn btn-sm btn-primary" href="{{ path('app_conference', { offset: next }) }}">Suivant</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

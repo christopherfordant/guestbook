@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conférence : {{ conference.name }}{% endblock %}
+
+{% block body %}
+    <script>
+        function confirmDel() {
+            if (confirm("Confirmez-vous la suppression de la conférence ?")) {
+                window.location = "{{ path('delConference', {id: conference.id}) }}";
+            }
+        }
+    </script>
+
+    <div class="card">
+        <div class="card-header">
+            {% if conference.photoFileName != '' %}
+                <img src="/uploads/photos/{{ conference.photoFileName }}">
+            {% endif %}
+            <h1 class="card-title font-weight-bold text-success">
+                Conférence : {{ conference.name }}
+            </h1>
+            <h5 class="card-subtitle mb-2 text-muted">
+                <div class="row">
+                    <div class="col-md-4 col-sm-6 col-xs-12">Ville&nbsp;:&nbsp;<strong>{{ conference.city }}</strong></div>
+                    <div class="col-md-4 col-sm-6 col-xs-12">Année&nbsp;:&nbsp;&nbsp;<strong>{{ conference.year }}</strong></div>
+                    <div class="col-md-4 col-sm-6 col-xs-12">
+                    {% if conference.isInternational %}
+                        Conférence <strong>Internationale</strong>
+                    {% else %}
+                        Conférence <strong>Française</strong>
+                    {% endif %}
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-6 text-end">
+                        <a href="{{ path('modifyConference', {id: conference.id}) }}" class="btn btn-sm btn-primary">
+                            Modifier la conférence
+                        </a>
+                    </div>
+                    <div class="col-6 text-start">
+                        <a href="javascript:confirmDel()" class="btn btn-sm btn-danger">
+                            Supprimer la conférence
+                        </a>
+                        
+                        <a href="{{ path('delConference', {id: conference.id}) }}" onclick="return confirm('Voulez-vous supprimer ?');" class="btn btn-sm btn-danger">
+                            Supprimer la conférence
+                        </a>
+                    </div>
+                 </div>
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                {% if previous >= 0 %}
+                    <a class="btn btn-sm btn-primary" href="{{ path('ficheConference', { id: conference.id, offset: previous }) }}">Précédent</a>
+                {% endif %}
+                    Il y a {{ comments|length~' commentaire'~( comments|length > 1 ? 's' : '') }}
+                    <a href="{{ path('conference_newcomment', {id: conference.id}) }}" class="btn btn-outline-primary"
+                        style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .2rem; --bs-btn-font-size: .75rem;" title="Ajouter un commentaire">
+                        +
+                    </a>
+                {% if next < comments|length %}
+                    <a class="btn btn-sm btn-primary" href="{{ path('ficheConference', { id: conference.id, offset: next }) }}">Suivant</a>
+                {% endif %}
+                </div>
+                {% for comment in comments %}
+                <div class="col-sm-6 col-xs-12">
+                    <div class="card text-left mt-4">
+                        <div class="card-header text-start">
+                            Commentaire saisi le <strong>{{ comment.createdAt | date('d/m/Y à H:i', timezone="Europe/Paris") }}</strong>,
+                            </br>
+                            par <strong>{{ comment.author }} <a href="mailto:{{ comment.email }}">({{ comment.email }})</a></strong>
+                        </div>
+                        <div class="card-body text-start">
+                            {{ comment.text }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

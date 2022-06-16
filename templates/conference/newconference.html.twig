@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if conference.id == null %}
+        Nouvelle Conférence
+    {% else %}
+        Conférence : {{ conference.name }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title font-weight-bold text-success">
+                {% if conference.id == null %}
+                    Nouvelle Conférence
+                {% else %}
+                    Conférence : {{ conference.name }}
+                {% endif %}
+            </h1>
+        </div>
+        <div class="card-body">
+            {{ form(form_conference) }}
+        </div>
+    </div>
+{% endblock %}
